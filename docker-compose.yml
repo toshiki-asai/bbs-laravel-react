@@ -1,0 +1,94 @@
+volumes:
+    php-fpm-socket:
+    psysh-store:
+    db-store:
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ${DOCKERDIR}/php/Dockerfile
+      args:
+        - WORKDIR_BACK=${WORKDIR_BACK}
+        - DOCKERDIR=${DOCKERDIR}
+    volumes:
+      # 作業ファイルの同期
+      - type: bind
+        source: ./back
+        target: ${WORKDIR_BACK}
+      # unixドメインソケット通信
+      - type: volume
+        source: php-fpm-socket
+        target: /var/run/php-fpm
+        volume:
+          nocopy: true
+      # Laravel tinker（psysh）の履歴保持
+      - type: volume
+        source: psysh-store
+        target: /root/.config/psysh
+        volume:
+          nocopy: true
+
+  web:
+    build:
+      context: .
+      dockerfile: ${DOCKERDIR}/nginx/Dockerfile
+      args:
+        - WORKDIR=${WORKDIR_BACK}
+        - DOCKERDIR=${DOCKERDIR}
+    ports:
+      - target: 80
+        protocol: tcp
+        mode: host
+        published: ${WEB_PORT:-80}
+    volumes:
+      - type: bind
+        source: ./back
+        target: ${WORKDIR_BACK}
+      - type: volume
+        source: php-fpm-socket
+        target: /var/run/php-fpm
+        volume:
+          nocopy: true
+
+  vite:
+    build:
+      context: .
+      dockerfile: ${DOCKERDIR}/node/Dockerfile
+      args:
+        - WORKDIR_FRONT=${WORKDIR_FRONT}
+        - DOCKERDIR=${DOCKERDIR}
+    ports:
+      - target: 5173
+        protocol: tcp
+        mode: host
+        published: ${VITE_PORT:-5173}
+    volumes:
+      - type: bind
+        source: ./front
+        target: ${WORKDIR_FRONT}
+    tty: true
+    stdin_open: true
+
+  db:
+    build:
+      context: .
+      dockerfile: ${DOCKERDIR}/postgresql/Dockerfile
+      args:
+        - DOCKERDIR=${DOCKERDIR}
+    ports:
+      - target: 5432
+        protocol: tcp
+        mode: host
+        published: ${DB_PORT:-5432}
+    volumes:
+      - type: volume
+        source: db-store
+        target: /var/lib/postgresql
+        volume:
+          nocopy: true
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - TZ=Asia/Tokyo

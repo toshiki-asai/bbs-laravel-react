@@ -1,0 +1,9 @@
+{
+    "emmet.triggerExpansionOnTab": true, // enable tab to expanse emmet tags
+    "blade.format.enable": true,         // if you would like to enable blade format
+    "laravel_goto_view.folders": {
+        "default": "/src/resources/views",
+        "js": "/src/resources/js/Pages",
+        "vendor": "/src/resources/views/vendor"
+    }
+}
