@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: ${DOCKERDIR}/nginx/Dockerfile
       args:
-        - WORKDIR=${WORKDIR_BACK}
+        - WORKDIR_BACK=${WORKDIR_BACK}
         - DOCKERDIR=${DOCKERDIR}
     ports:
       - target: 80
@@ -45,6 +45,9 @@ services:
       - type: bind
         source: ./back
         target: ${WORKDIR_BACK}
+      - type: bind
+        source: ./front/public
+        target: ${WORKDIR_FRONT}/public
       - type: volume
         source: php-fpm-socket
         target: /var/run/php-fpm
