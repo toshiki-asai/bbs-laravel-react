@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Http\Requests\Api\StorePostRequest;
 use App\Http\Requests\Api\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Services\CommentService;
 use App\Services\PostService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PostController extends Controller
 {
@@ -20,10 +22,10 @@ class PostController extends Controller
         protected UserService $userService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): AnonymousResourceCollection
     {
-        $posts = $this->postService->getPostsWithPagination(2);
-        return response()->json(['posts' => $posts]);
+        $posts = $this->postService->getPostsWithPagination(10);
+        return PostResource::collection($posts);
     }
     /**
      * Store a newly created resource in storage.
@@ -46,20 +48,12 @@ class PostController extends Controller
     public function show(Request $request, Post $post): JsonResponse
     {
         $user = $this->userService->findUser($post->user_id);
+        $post->setRelation('user', $user);
 
         return response()->json([
             'status' => 'success',
             'message' => '投稿を取得しました。',
-            'post' => [
-                'id' => $post->id,
-                'title' => $post->title,
-                'content' => $post->content,
-                'created_at' => $post->created_at,
-                'updated_at' => $post->updated_at,
-                'user_name' => $user->name,
-                'can_edit' => $request->user()->can('update', $post),
-                'can_delete' => $request->user()->can('delete', $post),
-            ]
+            'post' => new PostResource($post)
         ], 200);
     }
 
@@ -68,11 +62,7 @@ class PostController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => '投稿編集用の情報を取得しました。',
-            'post' => [
-                'id' => $post->id,
-                'title' => $post->title,
-                'content' => $post->content,
-            ]
+            'post' => new PostResource($post)
         ], 200);
     }
 

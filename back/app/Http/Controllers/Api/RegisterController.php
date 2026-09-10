@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StorePreRegisterRequest;
 use App\Http\Requests\Api\StoreRegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Services\PendingRegistrationSession;
 use App\Services\RegistrationService;
 use Illuminate\Http\JsonResponse;
@@ -115,6 +116,7 @@ class RegisterController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'ユーザー登録が完了いたしました。',
+            'user' => new UserResource($user),
         ], 201);
 
     }
