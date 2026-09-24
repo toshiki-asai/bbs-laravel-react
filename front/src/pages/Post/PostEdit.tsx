@@ -3,6 +3,7 @@ import { FieldGroup, FieldSet, Field, FieldLabel, FieldError } from '@/component
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea';
 import api from '@/services/api';
+import { flash } from '@/stores/flashMessageStore';
 import type { Post } from '@/types/post';
 import type { ValidationErrorResponse } from '@/types/validationErrorResponse';
 import axios from 'axios';
@@ -25,6 +26,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       content: formData.get("content")
     });
 
+    flash.success("投稿を修正しました。", true);
     return redirect("/posts/"+res.data.post_id);
   } catch(error) {
     if(axios.isAxiosError(error)){

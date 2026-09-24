@@ -21,7 +21,7 @@ export default function PostButton({id, can_edit, can_delete}: {
       }
       {can_delete &&
         <Form method="delete" className="inline-block ml-1" onSubmit={handleSubmit}>
-          <Button type="submit" variant="destructive">削除</Button>
+          <Button type="submit" name="_action" value="delete" variant="destructive">削除</Button>
         </Form>
       }
     </div>

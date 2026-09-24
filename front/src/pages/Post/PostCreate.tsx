@@ -3,6 +3,7 @@ import { FieldGroup, FieldSet, Field, FieldLabel, FieldError } from '@/component
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea';
 import api from '@/services/api';
+import { flash } from '@/stores/flashMessageStore';
 import type { ValidationErrorResponse } from '@/types/validationErrorResponse';
 import axios from 'axios';
 import { data, Form, redirect, useActionData, type ActionFunctionArgs } from 'react-router';
@@ -15,7 +16,7 @@ export async function action({ request }: ActionFunctionArgs) {
       title: formData.get("title"),
       content: formData.get("content")
     });
-
+    flash.success("投稿が完了しました。", true);
     return redirect("/posts/"+res.data.post_id);
   } catch(error) {
     if(axios.isAxiosError(error)){

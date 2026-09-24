@@ -1,7 +1,6 @@
 import { data, Link, useLoaderData, type LoaderFunctionArgs } from "react-router"
 
-export function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
+export function loader({ url }: LoaderFunctionArgs) {
   const name = url.searchParams.get("name") || "";
   const email = url.searchParams.get("email") || "";
 

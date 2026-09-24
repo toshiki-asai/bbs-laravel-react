@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
+use App\Http\Resources\UserResource;
 use \Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,7 @@ class LoginController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'ログイン成功しました。',
+            'user' => new UserResource($user),
         ], 200);
 
     }

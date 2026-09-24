@@ -26,10 +26,10 @@ export const router = createBrowserRouter([
     // errorElement: <ErrorPage />,
     children: [
       { index: true, Component: Login, action: loginAction, id: "login" },
-      { path: "logout", action: logoutAction, id: "logout" },
+      { path: "logout", Component: null, action: logoutAction, id: "logout" },
       { path: "preregister", Component: Preregister, action: preregisterAction, id: "preregister" },
       { path: "preregister_complete", Component: PreregisterComplete, id: "preregister_complete" },
-      { path: "verify", loader: emailVerifyLoader, id: "email_verify" },
+      { path: "verify", Component: null, loader: emailVerifyLoader, id: "email_verify" },
       { path: "register", Component: Register, loader: registerLoader, action: registerAction, id: "register" },
       { path: "register_complete", Component: RegisterComplete, loader: registerCompleteLoader, id: "register_complete" },
       { path: "posts", Component: PostList, loader:postListLoader, id: "posts" },

@@ -11,6 +11,8 @@ interface CommentRepositoryInterface
 
     public function getByPost(string $post_id): ?Collection;
 
+    public function getCursorPaginatedByPost(string $post_id);
+
     public function create(array $data): Comment;
 
     public function delete(string $id): bool;

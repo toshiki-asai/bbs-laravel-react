@@ -24,6 +24,16 @@ class CommentRepository implements CommentRepositoryInterface
             ->get();
     }
 
+    public function getCursorPaginatedByPost(string $post_id)
+    {
+        return $this->comment
+            ->where('post_id', $post_id)
+            ->with('user:id,name')
+            ->with('post')
+            ->orderBy('created_at', 'desc')
+            ->cursorPaginate(5);
+    }
+
     public function create(array $data): Comment
     {
         return $this->comment->create($data);

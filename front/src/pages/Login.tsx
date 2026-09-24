@@ -3,10 +3,10 @@ import { FieldGroup, FieldSet, FieldLabel, Field, FieldError } from '@/component
 import { Input } from '@/components/ui/input'
 import api from '@/services/api';
 import { data, Form, Link, redirect, useActionData, type ActionFunctionArgs } from 'react-router';
-import { useMessage } from '@/providers/MessageProvider';
-import { useLayoutEffect } from 'react';
 import axios from 'axios';
 import type { ValidationErrorResponse } from '@/types/validationErrorResponse';
+import { userStore } from '@/stores/userStore';
+import { flash } from '@/stores/flashMessageStore';
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -14,16 +14,18 @@ export async function action({ request }: ActionFunctionArgs) {
   const password = formData.get("password");
 
   try {
-    await api.post("/login", {
+    const res = await api.post("/login", {
       email:email,
       password:password
     });
+    userStore.setUser(res.data);
 
     return redirect("/posts");
   } catch(error) {
     if(axios.isAxiosError(error)){
       if (error.response?.status === 401) {
-        return data({ message: error.response.data.message }, { status: 401 });
+        flash.error(error.response.data.message);
+        return null;
       }
       if (error.response?.status === 422) {
         return data({ errors: error.response.data.errors }, { status: 422 });
@@ -35,10 +37,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Login() {
   const actionData = useActionData<ValidationErrorResponse>();
-  const {setMessage} = useMessage();
-  useLayoutEffect(()=> {
-    setMessage(actionData?.message);
-  }, [actionData?.message]);
 
   return (
     <>

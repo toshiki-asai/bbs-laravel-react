@@ -5,8 +5,7 @@ import { formatDate } from '@/utils/date';
 import ListPagination from '@/components/ListPagination';
 import type { Post } from '@/types/post';
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
+export async function loader({ url }: LoaderFunctionArgs) {
   const page = url.searchParams.get("page") || 1;
 
   const res = await api.get('/posts?page='+page)

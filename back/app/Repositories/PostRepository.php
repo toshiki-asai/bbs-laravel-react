@@ -20,13 +20,13 @@ class PostRepository implements PostRepositoryInterface
         return $this->post->with($relation)->find($id);
     }
 
-    public function getPaginated(int $perPage = 10): LengthAwarePaginator
+    public function getPaginated(int $per_page = 10): LengthAwarePaginator
     {
         return $this->post
             ->select('id','title','content','created_at','updated_at','user_id')
             ->with('user:id,name')
             ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+            ->paginate($per_page);
     }
 
     public function create(array $data): Post

@@ -25,7 +25,10 @@ class PostController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $posts = $this->postService->getPostsWithPagination(10);
-        return PostResource::collection($posts);
+        return PostResource::collection($posts)->additional([
+            'status' => 'success',
+            'message' => '投稿一覧を取得しました。'
+        ]);
     }
     /**
      * Store a newly created resource in storage.
@@ -48,7 +51,9 @@ class PostController extends Controller
     public function show(Request $request, Post $post): JsonResponse
     {
         $user = $this->userService->findUser($post->user_id);
-        $post->setRelation('user', $user);
+        $comments = $this->commentService->getComments($post->id);
+        $post->setRelation('user', $user)
+            ->setRelation('comment', $comments);
 
         return response()->json([
             'status' => 'success',

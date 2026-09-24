@@ -29,10 +29,10 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::post('/login', [LoginController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
-    Route::controller(PostController::class)->prefix('posts')->group(function () {
+Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
+    Route::controller(PostController::class)->group(function () {
         Route::get('/', 'index');
 
         Route::post('/', 'store');
@@ -46,5 +46,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
             Route::delete('/', 'destroy')->can('delete', 'post');
         });
+    });
+
+    Route::controller(CommentController::class)->prefix('{post}/comment')->whereUuid('post')->group(function () {
+        Route::get('/', 'index');
+
+        Route::post('/', 'store')->name('comment.store');
+
+        Route::delete('/{comment}', 'destroy')->scopeBindings()->can('delete', ['comment', 'post'])->name('comment.destroy');
     });
 });

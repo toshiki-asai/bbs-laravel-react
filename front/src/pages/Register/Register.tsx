@@ -5,6 +5,7 @@ import api from '@/services/api.jsx';
 import { data, Form, redirect, useActionData, useLoaderData, type ActionFunctionArgs } from 'react-router';
 import axios from 'axios';
 import type { ValidationErrorResponse } from '@/types/validationErrorResponse';
+import { userStore } from '@/stores/userStore';
 
 export async function loader() {
   const res = await api.get('/register');
@@ -23,6 +24,7 @@ export async function action({request}: ActionFunctionArgs) {
       password:password,
       password_confirmation:passwordConfirmation
     });
+    userStore.setUser(res.data);
 
     const params = new URLSearchParams();
     params.set("name", res.data.user.name);

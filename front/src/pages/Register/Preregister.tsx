@@ -29,7 +29,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Preregister() {
-  const actionData = useActionData<ValidationErrorResponse | any>()
+  const actionData = useActionData<ValidationErrorResponse>()
 
   return (
     <>
@@ -40,7 +40,7 @@ export default function Preregister() {
             <Field>
               <FieldLabel htmlFor="email" className="text-sm font-semibold">メールアドレス</FieldLabel>
               <Input id="email" name="email" type="email" placeholder="someone@example.com" />
-              {actionData?.errors?.email && <FieldError>{actionData.errors.email}</FieldError>}
+              { actionData?.errors?.email && <FieldError>{actionData.errors.email}</FieldError>}
             </Field>
             <Field className="pt-4">
               <Button type="submit">送信</Button>

@@ -20,6 +20,11 @@ class CommentService
         return $this->commentRepository->getByPost($post_id);
     }
 
+    public function getCommentsByCursol(string $post_id)
+    {
+        return $this->commentRepository->getCursorPaginatedByPost($post_id);
+    }
+
     public function addComment(string $user_id, string $post_id, array $data): Comment
     {
         $data['user_id'] = $user_id;

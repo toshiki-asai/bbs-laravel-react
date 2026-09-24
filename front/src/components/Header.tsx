@@ -1,11 +1,11 @@
 import { Form, NavLink, useLocation } from "react-router";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
-import { useUser } from "@/providers/UserProvider";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/hooks/useUser";
 
 export default function Header() {
-  const {isLoggedIn} = useUser();
   const path = useLocation().pathname;
+  const user = useUser();
 
   return (
     <header className="border-b-1">
@@ -13,7 +13,7 @@ export default function Header() {
         <h1 className="text-lg font-bold">
           掲示板
         </h1>
-        {path !== '/register' && isLoggedIn &&
+        {path !== '/register' && user &&
         <NavigationMenu>
           <NavigationMenuList className="gap-2">
             <NavigationMenuItem>
@@ -28,7 +28,7 @@ export default function Header() {
           </Form>
         </NavigationMenu>
         }
-        {path !== '/register' && isLoggedIn === false &&
+        {path !== '/register' && !user &&
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem className="gap-2">

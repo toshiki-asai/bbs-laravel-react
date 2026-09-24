@@ -11,7 +11,7 @@ interface PostRepositoryInterface
 
     public function findWithRelation(string $id, string $relation): ?Post;
 
-    public function getPaginated(int $perPage = 10): LengthAwarePaginator;
+    public function getPaginated(int $per_page = 10): LengthAwarePaginator;
 
     public function create(array $data): Post;
 
